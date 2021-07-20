@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 
 #include "GF2.hpp"

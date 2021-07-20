@@ -86,7 +86,7 @@ template<class T>
 void Matrix<T>::print() const {
     for (size_t i = 0; i < this->anzahlZeilen(); ++i) {
         for (size_t j = 0; j < this->zeilen[i].size(); ++j) {
-            std::cout << this->zeilen[i][j].toString() << " ";
+            std::cout << this->zeilen[i][j] << " ";
         }
         std::cout << std::endl;
     }

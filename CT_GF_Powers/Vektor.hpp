@@ -71,7 +71,7 @@ void Vektor<T>::print(const bool alsZeilenvektor) const {
         std::cout << "( ";
     }
     for (size_t i = 0; i < this->size(); ++i) {
-        std::cout << this->data[i].toString();
+        std::cout << this->data[i];
         if (alsZeilenvektor) {
             std::cout << " ";
         }

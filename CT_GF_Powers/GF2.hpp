@@ -16,6 +16,15 @@ public:
     const bool operator==(const GF2 other) const;
     const bool operator!=(const GF2 other) const;
     const std::string toString() const;
+    friend std::ostream& operator<<(std::ostream& os, const GF2& gf2) {
+        if (gf2.value) {
+            os << "1";
+        }
+        else {
+            os << "0";
+        }
+        return os;
+    }
 private:
     bool value;
 };
