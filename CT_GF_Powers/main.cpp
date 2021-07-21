@@ -13,11 +13,10 @@ using namespace std;
 int main(int argc, const char * argv[]) {
     const Polynom modularPolynom{{1, 1, 0, 0, 1}};
     const GF2m koerper{modularPolynom};
-    koerper.getMinimalpolynomBruteForce(Polynom({0, 1, 1})).printLong();
     const BCHCode code{koerper, 2};
     const Vektor<GF2> codewort{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-    cout << "Codewort: ";
-    codewort.print(true);
+//    cout << "Codewort: ";
+//    codewort.print(true);
     for (size_t stelle1 = 0; stelle1 < 15; ++stelle1) {
         for (size_t stelle2 = 0; stelle2 < 15; ++stelle2) {
             vector<GF2> fehler(15);
@@ -25,16 +24,16 @@ int main(int argc, const char * argv[]) {
             fehler[stelle2] = 1;
             const Vektor<GF2> empfangen{codewort+Vektor<GF2>(fehler)};
             const Vektor<size_t> syndrom{code.computeSyndromExp(empfangen)};
-            cout << "Fehlerstelle(n): " << stelle1;
-            cout << ", " << stelle2;
+//            cout << "Fehlerstelle(n): " << stelle1;
+//            cout << ", " << stelle2;
 //            cout << ", Syndrom: ";
 //            syndrom.print(true);
             const vector<size_t> fehlerBits{code.computeFehlerstellen(empfangen)};
-            cout << "  --> Fehlerstellen: ";
-            for (const size_t fehlerstelle : fehlerBits) {
-                cout << fehlerstelle << " ";
-            }
-            cout << endl;
+//            cout << "  --> Fehlerstellen: ";
+//            for (const size_t fehlerstelle : fehlerBits) {
+//                cout << fehlerstelle << " ";
+//            }
+//            cout << endl;
         }
     }
 
