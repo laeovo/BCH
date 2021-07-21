@@ -29,7 +29,10 @@ private:
     const Polynom modularPolynom;
     const size_t m;
     Polynom alpha;
+    std::vector<Polynom> polynome;
+    
     void setPrimitivesElement();
+    void setzePotenztabellen();
 };
 
 #endif /* GF2m_hpp */

@@ -9,6 +9,7 @@ using namespace std;
 GF2m::GF2m(const Polynom& modularPolynom) : modularPolynom(modularPolynom), m(modularPolynom.grad()) {
     assert(!this->modularPolynom.checkReduzibel());
     this->setPrimitivesElement();
+    this->setzePotenztabellen();
 }
 
 const Polynom GF2m::plus(const Polynom& a, const Polynom& b) const {
@@ -62,23 +63,20 @@ const size_t GF2m::getExponent(const Polynom& p) const {
     if (p.grad() >= this->m) {
         return this->getExponent(this->mod(p));
     }
-    for (size_t i = 0; i < power(2, this->m)-1; ++i) {
-        if (this->mod(this->alpha.pow(i)) == p) {
+    for (size_t i = 0; i < this->polynome.size(); ++i) {
+        if (this->polynome[i] == p) {
             return i;
         }
     }
-    return power(2, this->m)-1;
+    cout << "Polynom wurde nicht gefunden! p = ";
+    p.printLong();
+    assert(false);
+    return 0;
 }
 
 const Polynom GF2m::getPolynom(const size_t exponent) const {
-    // TODO: assert exponent <= 2^m-2
-    const vector<Polynom> polynomPool{polynomgenerator(this->m-1)};
-    for (const Polynom& p : polynomPool) {
-        if (this->getExponent(p) == exponent) {
-            return p;
-        }
-    }
-    return Polynom({0});
+    assert(exponent < power(2, this->m));
+    return this->polynome[exponent];
 }
 
 const Polynom GF2m::getInvers(const Polynom& p) const {
@@ -106,8 +104,6 @@ void GF2m::setPrimitivesElement() {
         this->alpha = polynomPool[i++];
     }
     while (!this->istPrimitiv(this->alpha));
-//    cout << "Primitives Element gesetzt: ";
-//    this->alpha.print();
 }
 
 
@@ -135,4 +131,12 @@ const size_t GF2m::getM() const {
 
 const Polynom& GF2m::getAlpha() const {
     return this->alpha;
+}
+
+void GF2m::setzePotenztabellen() {
+    this->polynome = vector<Polynom>(power(2, this->m));
+    for (size_t i = 0; i < power(2, this->m)-1; ++i) {
+        this->polynome[i] = this->mod(this->alpha.pow(i));
+    }
+    this->polynome[power(2, this->m)-1] = Polynom({0});
 }
