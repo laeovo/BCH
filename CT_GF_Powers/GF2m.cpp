@@ -82,8 +82,11 @@ const Polynom GF2m::getPolynom(const size_t exponent) const {
 }
 
 const Polynom GF2m::getInvers(const Polynom& p) const {
-    const size_t exponent{this->getExponent(p)};
     assert(p != 0);
+    if (p == 1) {
+        return Polynom({1});
+    }
+    const size_t exponent{this->getExponent(p)};
     return this->getPolynom(power(2, this->m)-1 - exponent);
 }
 
