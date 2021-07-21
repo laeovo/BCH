@@ -13,12 +13,14 @@ public:
     BCHCode(const GF2m& koerper, const size_t zuKorrigierendeBits);
     const Polynom get(const Polynom& empfangen) const;
     const Matrix<GF2>& getPruefmatrix() const;
+    const Matrix<size_t> getPruefmatrixExp() const;
     const Polynom& getGeneratorPolynom() const;
-    const Vektor<GF2> computeSyndrom(const Polynom& empfangen) const;
-    const Vektor<size_t> computeSyndromExp(const Polynom& empfangen) const;
-    const Polynom getCodewort(const Polynom& datenwort) const;
-    const std::vector<Polynom> getAlleCodewoerter() const;
-    const std::vector<size_t> computeFehlerstellen(const Polynom& empfangen) const;
+    const Vektor<GF2> computeSyndrom(const Vektor<GF2>& empfangen) const;
+    const Vektor<size_t> computeSyndromExp(const Vektor<GF2>& empfangen) const;
+    const Vektor<GF2> getCodewort(const Polynom& datenwort) const;
+//    const Wort getCodewort(const Wort& datenwort) const;
+    const std::vector<Vektor<GF2>> getAlleCodewoerter() const;
+    const std::vector<size_t> computeFehlerstellen(const Vektor<GF2>& empfangen) const;
 private:
     const GF2m& koerper;
     Matrix<GF2> H;

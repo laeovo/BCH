@@ -77,68 +77,86 @@ const Matrix<GF2>& BCHCode::getPruefmatrix() const {
     return this->H;
 }
 
+const Matrix<size_t> BCHCode::getPruefmatrixExp() const {
+    return this->Hexp;
+}
+
 const Polynom& BCHCode::getGeneratorPolynom() const {
     return this->g;
 }
 
-const Vektor<GF2> BCHCode::computeSyndrom(const Polynom& empfangen) const {
-    vector<GF2> koeffizienten{empfangen.getKoeff()};
-    while (koeffizienten.size() < this->n) {
-        koeffizienten.push_back(0);
-    }
-    reverse(koeffizienten.begin(), koeffizienten.end());
-    const Vektor<GF2> alsVektor{koeffizienten};
-    return this->H*alsVektor;
+const Vektor<GF2> BCHCode::computeSyndrom(const Vektor<GF2>& empfangen) const {
+    assert(empfangen.size() == this->n);
+    return this->H*empfangen;
 }
 
-const Vektor<size_t> BCHCode::computeSyndromExp(const Polynom& empfangen) const {
-    // TODO: funktioniert noch nicht
-    const Vektor<GF2> syndrom{this->computeSyndrom(empfangen)};
-    // TODO: syndrom.size() asserten
+const Vektor<size_t> BCHCode::computeSyndromExp(const Vektor<GF2>& empfangen) const {
+    const Vektor<GF2> syndromBinaer{this->computeSyndrom(empfangen)};
+//    cout << "Syndrom binär:";
+//    syndromBinaer.print(true);
     vector<size_t> exponenten{};
     for (size_t i = 0; i < this->zuKorrigierendeBits; ++i) {
         vector<GF2> koeffizienten{};
         for (size_t j = this->koerper.getM()-1; j < this->koerper.getM(); --j) {
-            koeffizienten.push_back(syndrom[this->koerper.getM()*i+j]);
+            koeffizienten.push_back(syndromBinaer[i*this->koerper.getM() + j]);
         }
-        const Polynom polynom{koeffizienten};
-        const size_t exponent{this->koerper.getExponent(polynom)};
+        const size_t exponent{this->koerper.getExponent(Polynom(koeffizienten))};
         exponenten.push_back(exponent);
     }
     return exponenten;
 }
 
-const Polynom BCHCode::getCodewort(const Polynom& datenwort) const {
+const Vektor<GF2> BCHCode::getCodewort(const Polynom& datenwort) const {
     assert(datenwort.grad() == this->k-1);
-    return datenwort * this->g;
+    const Polynom codewortAlsPolynom{datenwort * this->g};
+    return codewortAlsPolynom;
 }
 
-const vector<Polynom> BCHCode::getAlleCodewoerter() const {
-    vector<Polynom> codewoerter{};
+//const Wort BCHCode::getCodewort(const Wort& datenwort) const {
+//    assert(datenwort.getLaenge() == this->k);
+//
+//}
+
+const vector<Vektor<GF2>> BCHCode::getAlleCodewoerter() const {
+    vector<Vektor<GF2>> codewoerter{};
     for (const Polynom& datenwort : polynomgenerator(this->k-1, this->k-1)) {
         codewoerter.push_back(getCodewort(datenwort));
     }
     return codewoerter;
 }
 
-const vector<size_t> BCHCode::computeFehlerstellen(const Polynom& empfangen) const {
+const vector<size_t> BCHCode::computeFehlerstellen(const Vektor<GF2>& empfangen) const {
+//    cout << "Empfangen: ";
+//    empfangen.print(true);
     const Vektor<size_t> S{this->computeSyndromExp(empfangen)};
-    const Polynom S1{this->koerper.getPolynom(S[0])};
-    const Polynom S3{this->koerper.getPolynom(S[1])};
+//    cout << "S1 = a^" << S[0] << ", S3 = a^" << S[1] << endl;
     switch (this->zuKorrigierendeBits) {
+        case 1:
+            {
+                const Polynom S1{this->koerper.getPolynom(S[0])};
+                const Polynom sigma11{S1};
+                return {this->n - this->koerper.getExponent(sigma11) - 1};
+            }
         case 2:
             {
+                const Polynom S1{this->koerper.getPolynom(S[0])};
+                const Polynom S3{this->koerper.getPolynom(S[1])};
                 const Polynom sigma21{S1};
-                const Polynom sigma22{this->koerper.geteilt(this->koerper.mod(S1*S1*S1+S3), S1)};
+                const Polynom sigma22{this->koerper.geteilt(S1*S1*S1+S3, S1)};
+//                cout << "sigma21: a^" << this->koerper.getExponent(sigma21) << ", sigma22: a^" << this->koerper.getExponent(sigma22) << endl;
                 if (sigma21 == 0) {
                     return {this->koerper.getExponent(this->koerper.sqrt(sigma22))};
                 }
                 else {
-                    const Polynom C_i{this->koerper.geteilt(sigma22, this->koerper.mod(sigma21*sigma21))};
+                    const Polynom C_i{this->koerper.geteilt(sigma22, sigma21*sigma21)};
+//                    cout << "C_i: a^" << this->koerper.getExponent(C_i) << endl;
                     vector<size_t> loesungen{};
                     for (const Polynom& y : polynomgenerator(this->koerper.getM()-1)) {
-                        if (this->koerper.mod(y*y + y + C_i) == 0) {
-                            loesungen.push_back(this->koerper.getExponent(y));
+                        if (this->koerper.mod((y*y) + y + C_i) == 0) {
+                            const Polynom zuKorrigierendesBit{sigma21 * y};
+                            if (!(zuKorrigierendesBit == 0)) {
+                                loesungen.push_back(this->n - this->koerper.getExponent(sigma21 * y) - 1);
+                            }
                         }
                     }
                     return loesungen;

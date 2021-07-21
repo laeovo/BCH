@@ -10,12 +10,15 @@ class Vektor {
 public:
     Vektor();
     Vektor(const std::vector<T> input);
+    Vektor(const Polynom& p);
     const Vektor<T> operator+(const Vektor<T>& other) const;
     const Vektor<T>& operator*=(const T& lambda);
     const T& operator[](const size_t n) const;
     const T skalarprodukt(const Vektor<T>& other) const;
     const size_t size() const;
     void print(const bool alsZeilenvektor = false) const;
+    const Vektor<T> reverse() const;
+    const std::vector<T>& get() const;
 private:
     std::vector<T> data;
 };
@@ -25,6 +28,11 @@ Vektor<T>::Vektor() : data({}) {}
 
 template<class T>
 Vektor<T>::Vektor(const std::vector<T> input) : data(input) {}
+
+template<class T>
+Vektor<T>::Vektor(const Polynom& p) : data(p.getKoeff()) {
+    std::reverse(this->data.begin(), this->data.end());
+}
 
 template<class T>
 const Vektor<T> Vektor<T>::operator+(const Vektor<T>& other) const {
@@ -82,6 +90,18 @@ void Vektor<T>::print(const bool alsZeilenvektor) const {
     if (alsZeilenvektor) {
         std::cout << ")" << std::endl;
     }
+}
+
+template<class T>
+const Vektor<T> Vektor<T>::reverse() const {
+    std::vector<T> neueEintraege{this->data};
+    std::reverse(neueEintraege.begin(), neueEintraege.end());
+    return neueEintraege;
+}
+
+template<class T>
+const std::vector<T>& Vektor<T>::get() const {
+    return this->data;
 }
 
 #endif /* Vektor_hpp */

@@ -59,6 +59,9 @@ const bool GF2m::istPrimitiv(const Polynom& p) const {
 }
 
 const size_t GF2m::getExponent(const Polynom& p) const {
+    if (p.grad() >= this->m) {
+        return this->getExponent(this->mod(p));
+    }
     for (size_t i = 0; i < power(2, this->m)-1; ++i) {
         if (this->mod(this->alpha.pow(i)) == p) {
             return i;
