@@ -38,7 +38,7 @@ const Polynom GF2m::sqrt(const Polynom& p) const {
 }
 
 const size_t GF2m::ordnung(const Polynom& p) const {
-    assert(!(p == 0));
+    assert(p != 0);
     if (p.grad() >= m) {
         return this->ordnung(this->mod(p));
     }
@@ -83,7 +83,7 @@ const Polynom GF2m::getPolynom(const size_t exponent) const {
 
 const Polynom GF2m::getInvers(const Polynom& p) const {
     const size_t exponent{this->getExponent(p)};
-    assert(exponent < power(2, this->m)-1); // assert p != 0
+    assert(p != 0);
     return this->getPolynom(power(2, this->m)-1 - exponent);
 }
 
@@ -92,7 +92,7 @@ const Polynom GF2m::mod(const Polynom& p) const {
 }
 
 void GF2m::setPrimitivesElement() {
-    if (!(this->alpha == 0)) {
+    if (this->alpha != 0) {
         cout << "Es existiert bereits ein primitives Element: ";
         this->alpha.print();
         return;

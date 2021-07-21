@@ -18,6 +18,7 @@ public:
     const bool operator==(const Polynom& other) const;
     const bool operator==(const std::vector<GF2>& other) const;
     const bool operator==(const size_t other) const;
+    const bool operator!=(const size_t other) const;
     const GF2 operator[](const size_t i) const;
     const size_t grad() const;
     void print() const;

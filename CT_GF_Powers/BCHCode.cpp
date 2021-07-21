@@ -66,7 +66,7 @@ void BCHCode::setzeGeneratorPolynom() {
     assert(minimalPolynome.size() > 0);
     Polynom generatorPolynom{minimalPolynome[0]};
     for (size_t i = 1; i < minimalPolynome.size(); ++i) {
-        if (!(generatorPolynom.mod(minimalPolynome[i]) == 0)) {
+        if (generatorPolynom.mod(minimalPolynome[i]) != 0) {
             generatorPolynom = generatorPolynom * minimalPolynome[i];
         }
     }
@@ -154,7 +154,7 @@ const vector<size_t> BCHCode::computeFehlerstellen(const Vektor<GF2>& empfangen)
                     for (const Polynom& y : polynomgenerator(this->koerper.getM()-1)) {
                         if (this->koerper.mod((y*y) + y + C_i) == 0) {
                             const Polynom zuKorrigierendesBit{sigma21 * y};
-                            if (!(zuKorrigierendesBit == 0)) {
+                            if (zuKorrigierendesBit != 0) {
                                 loesungen.push_back(this->n - this->koerper.getExponent(sigma21 * y) - 1);
                             }
                         }

@@ -43,7 +43,7 @@ const Polynom Polynom::operator*(const Polynom& other) const {
 }
 
 const Polynom Polynom::mod(const Polynom& other) const {
-    assert(!(other == 0));
+    assert(other != 0);
     if (other == 1) {
         return Polynom();
     }
@@ -89,6 +89,10 @@ const bool Polynom::operator==(const size_t other) const {
         cout << "Sinnloser Vergleich: Polynom == " << other << endl;
     }
     return false;
+}
+
+const bool Polynom::operator!=(const size_t other) const {
+    return !(*this == other);
 }
 
 const GF2 Polynom::operator[](const size_t i) const {
