@@ -170,3 +170,12 @@ const vector<size_t> BCHCode::computeFehlerstellen(const Vektor<GF2>& empfangen)
     }
     return {};
 }
+
+const Vektor<GF2> BCHCode::dekodieren(const Vektor<GF2>& empfangen) const {
+    const vector<size_t> fehlerstellen{this->computeFehlerstellen(empfangen)};
+    vector<GF2> bits{empfangen.get()};
+    for (const size_t fehler : fehlerstellen) {
+        bits[fehler] = bits[fehler] + 1;
+    }
+    return bits;
+}

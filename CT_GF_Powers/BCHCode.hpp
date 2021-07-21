@@ -21,6 +21,7 @@ public:
 //    const Wort getCodewort(const Wort& datenwort) const;
     const std::vector<Vektor<GF2>> getAlleCodewoerter() const;
     const std::vector<size_t> computeFehlerstellen(const Vektor<GF2>& empfangen) const;
+    const Vektor<GF2> dekodieren(const Vektor<GF2>& empfangen) const;
 private:
     const GF2m& koerper;
     Matrix<GF2> H;

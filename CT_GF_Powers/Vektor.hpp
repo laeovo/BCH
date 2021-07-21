@@ -13,6 +13,8 @@ public:
     Vektor(const Polynom& p);
     const Vektor<T> operator+(const Vektor<T>& other) const;
     const Vektor<T>& operator*=(const T& lambda);
+    const bool operator==(const Vektor<T>& other) const;
+    const bool operator!=(const Vektor<T>& other) const;
     const T& operator[](const size_t n) const;
     const T skalarprodukt(const Vektor<T>& other) const;
     const size_t size() const;
@@ -50,6 +52,16 @@ const Vektor<T>& Vektor<T>::operator*=(const T& lambda) {
         eintrag = lambda * eintrag;
     }
     return *this;
+}
+
+template<class T>
+const bool Vektor<T>::operator==(const Vektor<T>& other) const {
+    return this->data == other.data;
+}
+
+template<class T>
+const bool Vektor<T>::operator!=(const Vektor<T>& other) const {
+    return !(*this == other);
 }
 
 template<class T>

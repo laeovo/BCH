@@ -23,17 +23,10 @@ int main(int argc, const char * argv[]) {
             fehler[stelle1] = 1;
             fehler[stelle2] = 1;
             const Vektor<GF2> empfangen{codewort+Vektor<GF2>(fehler)};
-            const Vektor<size_t> syndrom{code.computeSyndromExp(empfangen)};
-//            cout << "Fehlerstelle(n): " << stelle1;
-//            cout << ", " << stelle2;
-//            cout << ", Syndrom: ";
-//            syndrom.print(true);
-            const vector<size_t> fehlerBits{code.computeFehlerstellen(empfangen)};
-//            cout << "  --> Fehlerstellen: ";
-//            for (const size_t fehlerstelle : fehlerBits) {
-//                cout << fehlerstelle << " ";
-//            }
-//            cout << endl;
+            const Vektor<GF2> korrigiert{code.dekodieren(empfangen)};
+            if (korrigiert != codewort) {
+                cout << "Fehler!" << endl;
+            }
         }
     }
 
